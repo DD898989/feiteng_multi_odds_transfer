@@ -1,0 +1,1986 @@
+<!DOCTYPE html>
+<!-- saved from url=(0045)https://git.b5k.io/fsbs/go-ums/pulls/95/files -->
+<html lang="zh-TW"><head data-suburl=""><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<title>#95 - 新增波膽賠率轉換函數 -  go-ums - Gitea: Git with a cup of tea</title>
+	<link rel="manifest" href="https://git.b5k.io/manifest.json" crossorigin="use-credentials">
+
+	<script>
+		if ('serviceWorker' in navigator) {
+  			window.addEventListener('load', function() {
+    			navigator.serviceWorker.register('/serviceworker.js').then(function(registration) {
+      				
+      				console.log('ServiceWorker registration successful with scope: ', registration.scope);
+				}, function(err) {
+					
+      				console.log('ServiceWorker registration failed: ', err);
+    			});
+  			});
+		}
+
+	</script>
+
+	<meta name="theme-color" content="#6cc644">
+	<meta name="author" content="fsbs">
+	<meta name="description" content="go-ums - Unite Match Service
+統一賽事資料服務">
+	<meta name="keywords" content="go,git,self-hosted,gitea">
+	<meta name="referrer" content="no-referrer">
+	<meta name="_csrf" content="5G3fTaue2NNrZN9Gt7EUtn6f4Bc6MTU5MTYyODAzOTM5Njk0OTQ4NA==">
+	<meta name="_suburl" content="">
+	
+		<meta name="_uid" content="38">
+	
+	
+	
+
+
+	<script>
+	/*
+	@licstart  The following is the entire license notice for the
+        JavaScript code in this page.
+
+	Copyright (c) 2016 The Gitea Authors
+	Copyright (c) 2015 The Gogs Authors
+
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in
+	all copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	THE SOFTWARE.
+	---
+	Licensing information for additional javascript libraries can be found at:
+	  {{AppSubUrl}}/vendor/librejs.html
+
+	@licend  The above is the entire license notice
+        for the JavaScript code in this page.
+	*/
+	</script>
+
+	<link rel="shortcut icon" href="https://git.b5k.io/img/favicon.png">
+	<link rel="mask-icon" href="https://git.b5k.io/img/gitea-safari.svg" color="#609926">
+	<link rel="stylesheet" href="./index/font-awesome.min.css" as="style" onload="this.rel=&#39;stylesheet&#39;">
+	<noscript><link rel="stylesheet" href="/vendor/assets/font-awesome/css/font-awesome.min.css"></noscript>
+	<link rel="stylesheet" href="./index/octicons.min.css">
+
+
+
+
+
+
+	<link rel="stylesheet" href="./index/tribute.css">
+
+
+	
+	<link rel="stylesheet" href="./index/semantic.min.css">
+	<link rel="stylesheet" href="./index/index.css">
+	<noscript>
+		<style>
+			.dropdown:hover > .menu { display: block; }
+			.ui.secondary.menu .dropdown.item > .menu { margin-top: 0; }
+		</style>
+	</noscript>
+
+
+	<link rel="stylesheet" href="./index/github.css">
+
+
+
+
+
+	<style class="list-search-style"></style>
+
+	<script src="./index/polyfill.min.js.下載"></script>
+	<script src="./index/loadCSS.min.js.下載"></script>
+	<script src="./index/cssrelpreload.min.js.下載"></script>
+
+	<meta property="og:title" content="go-ums">
+	<meta property="og:type" content="object">
+	<meta property="og:image" content="https://git.b5k.io/img/avatar_default.png">
+	<meta property="og:url" content="https://git.b5k.io/fsbs/go-ums">
+	
+	<meta property="og:description" content="Unite Match Service
+統一賽事資料服務">
+	
+	<meta property="og:site_name" content="Gitea: Git with a cup of tea">
+
+
+	
+
+
+</head>
+<body data-gr-c-s-loaded="true">
+	
+
+	<div class="full height">
+		<noscript>本網站在啟用 JavaScript 的情況下可以運作的更好。</noscript>
+
+		
+
+		
+			<div class="ui top secondary stackable main menu following bar light">
+				<div class="ui container" id="navbar">
+	<div class="item brand" style="justify-content: space-between;">
+		<a href="https://git.b5k.io/">
+			<img class="ui mini image" src="./index/gitea-sm.png">
+		</a>
+		<div class="ui basic icon button mobile-only" id="navbar-expand-toggle">
+			<i class="sidebar icon"></i>
+		</div>
+	</div>
+
+	
+		<a class="item " href="https://git.b5k.io/">控制面版</a>
+		<a class="item " href="https://git.b5k.io/issues">問題</a>
+		<a class="item " href="https://git.b5k.io/pulls">合併請求</a>
+		<a class="item " href="https://git.b5k.io/explore/repos">探索</a>
+	
+
+	
+
+	
+
+	
+		<div class="right stackable menu">
+			<a href="https://git.b5k.io/notifications" class="item poping up" data-content="訊息" data-variation="tiny inverted">
+				<span class="text">
+					<i class="fitted octicon octicon-bell"></i>
+					<span class="sr-mobile-only">訊息</span>
+
+					
+						<span class="ui red label">
+							331
+						</span>
+					
+				</span>
+			</a>
+
+			<div class="ui dropdown jump item poping up" data-content="建立..." data-variation="tiny inverted" tabindex="0">
+				<span class="text">
+					<i class="fitted octicon octicon-plus"></i>
+					<span class="sr-mobile-only">建立...</span>
+					<i class="fitted octicon octicon-triangle-down not-mobile"></i>
+				</span>
+				<div class="menu" tabindex="-1">
+					<a class="item" href="https://git.b5k.io/repo/create">
+						<i class="octicon octicon-plus"></i> 新增儲存庫
+					</a>
+					<a class="item" href="https://git.b5k.io/repo/migrate">
+						<i class="octicon octicon-repo-clone"></i> 遷移外部儲存庫
+					</a>
+					
+					<a class="item" href="https://git.b5k.io/org/create">
+						<i class="octicon octicon-organization"></i> 新增組織
+					</a>
+					
+				</div>
+			</div>
+
+			<div class="ui dropdown jump item poping up" data-content="設定檔和設置..." data-variation="tiny inverted" tabindex="0">
+				<span class="text">
+					<img class="ui tiny avatar image" src="./index/cc3dc2efb1d78f802555acc9fd9b66b3">
+					<span class="sr-only">設定檔和設置...</span>
+					<span class="mobile-only">dave.gam</span>
+					<i class="fitted octicon octicon-triangle-down not-mobile" tabindex="-1"></i>
+				</span>
+				<div class="menu user-menu" tabindex="-1">
+					<div class="ui header">
+						已登入用戶 <strong>dave.gam</strong>
+					</div>
+
+					<div class="divider"></div>
+					<a class="item" href="https://git.b5k.io/dave.gam">
+						<i class="octicon octicon-person"></i>
+						個人訊息
+					</a>
+					<a class="item" href="https://git.b5k.io/dave.gam?tab=stars">
+						<i class="octicon octicon-star"></i>
+						標記星號
+					</a>
+					<a class=" item" href="https://git.b5k.io/user/settings">
+						<i class="octicon octicon-settings"></i>
+						設定
+					</a>
+					<a class="item" target="_blank" rel="noopener noreferrer" href="https://docs.gitea.io/">
+						<i class="octicon octicon-question"></i>
+						說明
+					</a>
+					
+
+					<div class="divider"></div>
+					<a class="item" href="https://git.b5k.io/user/logout">
+						<i class="octicon octicon-sign-out"></i>
+						登出
+					</a>
+				</div>
+			</div>
+		</div>
+
+	
+</div>
+
+			</div>
+		
+
+
+<div class="repository view issue pull files diff">
+	<div class="header-wrapper">
+
+	<div class="ui container">
+		<div class="repo-header">
+			<div class="ui huge breadcrumb repo-title">
+				
+				<i class="mega-octicon octicon-lock"></i>
+				
+				<a href="https://git.b5k.io/fsbs">fsbs</a>
+				<div class="divider"> / </div>
+				<a href="https://git.b5k.io/fsbs/go-ums">go-ums</a>
+				
+				
+				
+			</div>
+			<div class="repo-buttons">
+				<div class="ui labeled button" tabindex="0">
+					<a class="ui compact basic button" href="https://git.b5k.io/fsbs/go-ums/action/unwatch?redirect_to=%2ffsbs%2fgo-ums%2fpulls%2f95%2ffiles">
+						<i class="icon fa-eye"></i>取消關注
+					</a>
+					<a class="ui basic label" href="https://git.b5k.io/fsbs/go-ums/watchers">
+						15
+					</a>
+				</div>
+				<div class="ui labeled button" tabindex="0">
+					<a class="ui compact basic button" href="https://git.b5k.io/fsbs/go-ums/action/star?redirect_to=%2ffsbs%2fgo-ums%2fpulls%2f95%2ffiles">
+						<i class="icon star outline"></i>收藏
+					</a>
+					<a class="ui basic label" href="https://git.b5k.io/fsbs/go-ums/stars">
+						0
+					</a>
+				</div>
+				
+					<div class="ui labeled button " tabindex="0">
+						<a class="ui compact basic button " href="https://git.b5k.io/repo/fork/98" data-position="top center" data-variation="tiny">
+							<i class="octicon octicon-repo-forked"></i>複製
+						</a>
+						<a class="ui basic label" href="https://git.b5k.io/fsbs/go-ums/forks">
+							0
+						</a>
+					</div>
+				
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ui tabs container">
+		<div class="ui tabular stackable menu navbar">
+			
+			<a class=" item" href="https://git.b5k.io/fsbs/go-ums">
+				<i class="octicon octicon-code"></i> 程式碼
+			</a>
+			
+
+			
+				<a class=" item" href="https://git.b5k.io/fsbs/go-ums/issues">
+					<i class="octicon octicon-issue-opened"></i> 問題 <span class="ui gray small label">0</span>
+				</a>
+			
+
+			
+
+			
+				<a class="active item" href="https://git.b5k.io/fsbs/go-ums/pulls">
+					<i class="octicon octicon-git-pull-request"></i> 合併請求 <span class="ui gray small label">0</span>
+				</a>
+			
+
+			
+			<a class=" item" href="https://git.b5k.io/fsbs/go-ums/releases">
+				<i class="octicon octicon-tag"></i> 版本發佈 <span class="ui blue small label">27</span>
+			</a>
+			
+
+			
+				<a class=" item" href="https://git.b5k.io/fsbs/go-ums/wiki">
+					<i class="octicon octicon-book"></i> Wiki
+				</a>
+			
+
+			
+				<a class=" item" href="https://git.b5k.io/fsbs/go-ums/activity">
+					<i class="octicon octicon-pulse"></i> 活動
+				</a>
+			
+
+			
+
+			
+		</div>
+	</div>
+	<div class="ui tabs divider"></div>
+
+</div>
+
+	<div class="ui container">
+		<div class="navbar">
+			<div class="ui compact left small menu">
+	<a class=" item" href="https://git.b5k.io/fsbs/go-ums/labels">標籤</a>
+	<a class=" item" href="https://git.b5k.io/fsbs/go-ums/milestones">里程碑</a>
+</div>
+
+			<div class="ui right">
+				<a class="ui green button " href="https://git.b5k.io/fsbs/go-ums/compare/master...master">建立合併請求</a>
+			</div>
+		</div>
+		<div class="ui divider"></div>
+		<div class="sixteen wide column title">
+	<div class="ui grid">
+		<h1 class="twelve wide column">
+			<span class="index">#95</span> <span id="issue-title" class="has-emoji">新增波膽賠率轉換函數</span>
+			<div id="edit-title-input" class="ui input" style="display: none">
+				<input value="新增波膽賠率轉換函數">
+			</div>
+		</h1>
+		
+	</div>
+	
+		<div class="ui purple large label"><i class="octicon octicon-git-pull-request"></i> 已合併</div>
+	
+
+	
+		
+			
+			<a href="https://git.b5k.io/kaiji.chang">kaiji.chang</a>
+			<span class="pull-desc">於 <span>3 月之前</span> 將 3 次代碼提交從 <code>feature/mutiple_odds_cal</code>合併至 <code>develop</code></span>
+		
+	
+	<div class="ui divider"></div>
+</div>
+
+		<div class="ui top attached pull tabular stackable menu">
+	<a class="item " href="https://git.b5k.io/fsbs/go-ums/pulls/95">
+		<span class="octicon octicon-comment-discussion"></span>
+		對話內容
+		<span class="ui gray small label">0</span>
+	</a>
+	<a class="item " href="https://git.b5k.io/fsbs/go-ums/pulls/95/commits">
+		<span class="octicon octicon-git-commit"></span>
+		程式碼提交
+		<span class="ui blue small label">3</span>
+	</a>
+	<a class="item active" href="https://git.b5k.io/fsbs/go-ums/pulls/95/files">
+		<span class="octicon octicon-diff"></span>
+		檔案變動
+		<span class="ui blue small label">2</span>
+	</a>
+</div>
+
+		
+
+
+
+		<div class="ui bottom attached tab pull segment active">
+			
+	<div class="diff-detail-box diff-box ui sticky">
+		<div>
+			<i class="fa fa-retweet"></i>
+			共有 <strong> 2 個檔案被更改</strong>，包括 <strong>71 行新增</strong> 和 <strong>0 行删除</strong>
+			<div class="ui right">
+				
+					<div class="ui dropdown tiny button" tabindex="0">
+	Whitespace
+	<i class="dropdown icon" tabindex="0"><div class="menu" tabindex="-1"></div></i>
+	<div class="menu" tabindex="-1">
+		<a class="item" href="https://git.b5k.io/fsbs/go-ums/pulls/95/files?style=unified&amp;whitespace=">
+			<i class="circle dot icon"></i>
+			Show all changes
+		</a>
+		<a class="item" href="https://git.b5k.io/fsbs/go-ums/pulls/95/files?style=unified&amp;whitespace=ignore-all">
+			<i class="circle outline icon"></i>
+			Ignore whitespace when comparing lines
+		</a>
+		<a class="item" href="https://git.b5k.io/fsbs/go-ums/pulls/95/files?style=unified&amp;whitespace=ignore-change">
+			<i class="circle outline icon"></i>
+			Ignore changes in amount of whitespace
+		</a>
+		<a class="item" href="https://git.b5k.io/fsbs/go-ums/pulls/95/files?style=unified&amp;whitespace=ignore-eol">
+			<i class="circle outline icon"></i>
+			Ignore changes in whitespace at EOL
+		</a>
+	</div>
+</div>
+<a class="ui tiny basic toggle button" href="https://git.b5k.io/fsbs/go-ums/pulls/95/files?style=split&amp;whitespace=">分割檢視</a>
+
+				
+				<a class="ui tiny basic toggle button" data-target="#diff-files">顯示文件統計</a>
+				
+					<div class="ui top right pointing dropdown custom" id="review-box">
+	<div class="ui tiny green button btn-review">
+		<span class="text">Review</span>
+		<i class="dropdown icon" tabindex="0"><div class="menu" tabindex="-1"></div></i>
+	</div>
+	<div class="menu">
+		<div class="ui clearing segment">
+			<form class="ui form" action="https://git.b5k.io/fsbs/go-ums/pulls/95/files/reviews/submit" method="post">
+			<input type="hidden" name="_csrf" value="5G3fTaue2NNrZN9Gt7EUtn6f4Bc6MTU5MTYyODAzOTM5Njk0OTQ4NA==">
+				<i class="ui right floated link icon close"></i>
+				<div class="header">
+				Submit review
+				</div>
+				<div class="ui field">
+					<textarea name="content" tabindex="0" rows="2" placeholder="Review comment"></textarea>
+				</div>
+				<div class="ui divider"></div>
+				<button type="submit" name="type" value="approve" disabled="" class="ui submit green tiny button btn-submit">Approve</button>
+				<button type="submit" name="type" value="comment" class="ui submit tiny basic button btn-submit">Comment</button>
+				<button type="submit" name="type" value="reject" disabled="" class="ui submit red tiny button btn-submit">Request changes</button>
+			</form>
+		</div>
+	</div>
+</div>
+
+				
+			</div>
+		</div>
+		<ol class="detail-files hide" id="diff-files">
+			
+				<li>
+					<div class="diff-counter count pull-right">
+						
+							<span class="add" data-line="48">48</span>
+							<span class="bar">
+								<div class="pull-left add" style="width: 100%;"></div>
+								<div class="pull-left del"></div>
+							</span>
+							<span class="del" data-line="0">0</span>
+						
+					</div>
+					
+					<span class="status modify poping up" data-content="modify" data-variation="inverted tiny" data-position="right center">&nbsp;</span>
+					<a class="file" href="https://git.b5k.io/fsbs/go-ums/pulls/95/files#diff-1">handlers/offertype/oddscal.go</a>
+				</li>
+			
+				<li>
+					<div class="diff-counter count pull-right">
+						
+							<span class="add" data-line="23">23</span>
+							<span class="bar">
+								<div class="pull-left add" style="width: 100%;"></div>
+								<div class="pull-left del"></div>
+							</span>
+							<span class="del" data-line="0">0</span>
+						
+					</div>
+					
+					<span class="status modify poping up" data-content="modify" data-variation="inverted tiny" data-position="right center">&nbsp;</span>
+					<a class="file" href="https://git.b5k.io/fsbs/go-ums/pulls/95/files#diff-2">handlers/offertype/oddscal_test.go</a>
+				</li>
+			
+		</ol>
+	</div>
+
+	
+		
+			<div class="diff-file-box diff-box file-content tab-size-8" id="diff-1">
+				<h4 class="ui top attached normal header">
+					<div class="diff-counter count">
+						
+							<span class="add" data-line="48">+ 48</span>
+							<span class="bar">
+								<div class="pull-left add" style="width: 100%;"></div>
+								<div class="pull-left del"></div>
+							</span>
+							<span class="del" data-line="0">- 0</span>
+						
+					</div>
+					<span class="file">handlers/offertype/oddscal.go</span>
+					
+						
+							<a class="ui basic grey tiny button" rel="nofollow" href="https://git.b5k.io/fsbs/go-ums/src/commit/6d16f0134bf31f79f773df996f93384d5b11b4b0/handlers/offertype/oddscal.go">查看文件</a>
+						
+					
+				</h4>
+				<div class="ui attached unstackable table segment">
+					
+						
+						
+							<div class="file-body file-code code-view code-diff code-diff-unified">
+								<table>
+									<tbody>
+										
+											
+
+
+	
+		<tr class="tag-code nl-0 ol-0">
+			
+			<td colspan="2" class="lines-num">
+				
+			</td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=""></span></td>
+			<td class="lines-code lines-code-old"><span class="mono wrap language-go">@@ -217,6 +217,27 @@ func OddsToOppoOrigin(homeOdds, awayOdds, drawOdds float64) (float64, float64, f</span></td>
+		</tr>
+		
+	
+		<tr class="same-code nl-1 ol-1">
+			
+			<td class="lines-num lines-num-old" data-line-num="217"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1L217"></span></td>
+			<td class="lines-num lines-num-new" data-line-num="217"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R217"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=" "></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="217">+</a><span class="mono wrap language-go">	return hoppo, aoppo, doppo</span></td>
+		</tr>
+		
+	
+		<tr class="same-code nl-2 ol-2">
+			
+			<td class="lines-num lines-num-old" data-line-num="218"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1L218"></span></td>
+			<td class="lines-num lines-num-new" data-line-num="218"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R218"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=" "></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="218">+</a><span class="mono wrap language-go">}</span></td>
+		</tr>
+		
+	
+		<tr class="same-code nl-3 ol-3">
+			
+			<td class="lines-num lines-num-old" data-line-num="219"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1L219"></span></td>
+			<td class="lines-num lines-num-new" data-line-num="219"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R219"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=" "></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="219">+</a><span class="mono wrap language-go"><br></span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-4 ol-4">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="220"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R220"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="220">+</a><span class="mono wrap language-go">// MultiOddsToOppoOrigin same as OddsToOppoOrigin</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-5 ol-5">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="221"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R221"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="221">+</a><span class="mono wrap language-go">func MultiOddsToOppoOrigin(oddses []float64) (oppos []float64) {</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-6 ol-6">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="222"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R222"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="222">+</a><span class="mono wrap language-go"><br></span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-7 ol-7">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="223"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R223"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="223">+</a><span class="mono wrap language-go">	oppos = make([]float64, len(oddses))</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-8 ol-8">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="224"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R224"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="224">+</a><span class="mono wrap language-go">	waters := make([]float64, len(oddses))</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-9 ol-9">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="225"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R225"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="225">+</a><span class="mono wrap language-go">	watersSum := 0.0</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-10 ol-10">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="226"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R226"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="226">+</a><span class="mono wrap language-go">	for idx := range waters {</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-11 ol-11">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="227"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R227"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="227">+</a><span class="mono wrap language-go">		if oddses[idx] == 0 {</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-12 ol-12">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="228"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R228"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="228">+</a><span class="mono wrap language-go">			waters[idx] = 0</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-13 ol-13">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="229"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R229"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="229">+</a><span class="mono wrap language-go">		} else {</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-14 ol-14">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="230"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R230"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="230">+</a><span class="mono wrap language-go">			waters[idx] = (1 / (oddses[idx] + 1))</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-15 ol-15">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="231"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R231"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="231">+</a><span class="mono wrap language-go">		}</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-16 ol-16">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="232"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R232"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="232">+</a><span class="mono wrap language-go">		watersSum += waters[idx]</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-17 ol-17">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="233"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R233"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="233">+</a><span class="mono wrap language-go">	}</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-18 ol-18">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="234"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R234"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="234">+</a><span class="mono wrap language-go"><br></span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-19 ol-19">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="235"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R235"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="235">+</a><span class="mono wrap language-go">	for idx := range waters {</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-20 ol-20">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="236"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R236"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="236">+</a><span class="mono wrap language-go">		oppos[idx] = waters[idx] / watersSum</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-21 ol-21">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="237"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R237"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="237">+</a><span class="mono wrap language-go">	}</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-22 ol-22">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="238"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R238"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="238">+</a><span class="mono wrap language-go">	return</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-23 ol-23">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="239"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R239"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="239">+</a><span class="mono wrap language-go">}</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-24 ol-24">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="240"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R240"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="240">+</a><span class="mono wrap language-go"><br></span></td>
+		</tr>
+		
+	
+		<tr class="same-code nl-25 ol-25">
+			
+			<td class="lines-num lines-num-old" data-line-num="220"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1L220"></span></td>
+			<td class="lines-num lines-num-new" data-line-num="241"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R241"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=" "></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="241">+</a><span class="mono wrap language-go">// MultiOddsToOppo 計算多選項的玩法類型，波膽 冠軍 半全場 總入球</span></td>
+		</tr>
+		
+	
+		<tr class="same-code nl-26 ol-26">
+			
+			<td class="lines-num lines-num-old" data-line-num="221"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1L221"></span></td>
+			<td class="lines-num lines-num-new" data-line-num="242"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R242"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=" "></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="242">+</a><span class="mono wrap language-go">// func MultiOddsToOppo(odds []float64) []float64 {</span></td>
+		</tr>
+		
+	
+		<tr class="same-code nl-27 ol-27">
+			
+			<td class="lines-num lines-num-old" data-line-num="222"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1L222"></span></td>
+			<td class="lines-num lines-num-new" data-line-num="243"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R243"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=" "></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="243">+</a><span class="mono wrap language-go">// 	res := make([]float64, len(odds))</span></td>
+		</tr>
+		
+	
+
+	
+		<tr class="tag-code nl-0 ol-0">
+			
+			<td colspan="2" class="lines-num">
+				
+			</td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=""></span></td>
+			<td class="lines-code lines-code-old"><span class="mono wrap language-go">@@ -244,6 +265,12 @@ func OddsToJuice(h, a, d float64) uint {</span></td>
+		</tr>
+		
+	
+		<tr class="same-code nl-1 ol-1">
+			
+			<td class="lines-num lines-num-old" data-line-num="244"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1L244"></span></td>
+			<td class="lines-num lines-num-new" data-line-num="265"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R265"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=" "></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="265">+</a><span class="mono wrap language-go">	return JuiceToSetting(j)</span></td>
+		</tr>
+		
+	
+		<tr class="same-code nl-2 ol-2">
+			
+			<td class="lines-num lines-num-old" data-line-num="245"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1L245"></span></td>
+			<td class="lines-num lines-num-new" data-line-num="266"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R266"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=" "></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="266">+</a><span class="mono wrap language-go">}</span></td>
+		</tr>
+		
+	
+		<tr class="same-code nl-3 ol-3">
+			
+			<td class="lines-num lines-num-old" data-line-num="246"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1L246"></span></td>
+			<td class="lines-num lines-num-new" data-line-num="267"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R267"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=" "></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="267">+</a><span class="mono wrap language-go"><br></span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-4 ol-4">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="268"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R268"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="268">+</a><span class="mono wrap language-go">// MultiOddsToJuice same as OddsToJuice</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-5 ol-5">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="269"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R269"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="269">+</a><span class="mono wrap language-go">func MultiOddsToJuice(oddses []float64) uint {</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-6 ol-6">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="270"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R270"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="270">+</a><span class="mono wrap language-go">	j := MultiOddsToOriginJuice(oddses)</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-7 ol-7">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="271"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R271"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="271">+</a><span class="mono wrap language-go">	return JuiceToSetting(j)</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-8 ol-8">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="272"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R272"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="272">+</a><span class="mono wrap language-go">}</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-9 ol-9">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="273"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R273"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="273">+</a><span class="mono wrap language-go"><br></span></td>
+		</tr>
+		
+	
+		<tr class="same-code nl-10 ol-10">
+			
+			<td class="lines-num lines-num-old" data-line-num="247"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1L247"></span></td>
+			<td class="lines-num lines-num-new" data-line-num="274"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R274"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=" "></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="274">+</a><span class="mono wrap language-go">//OddsToOriginJuice 原始賠率計算出原始水位（浮點數格式）</span></td>
+		</tr>
+		
+	
+		<tr class="same-code nl-11 ol-11">
+			
+			<td class="lines-num lines-num-old" data-line-num="248"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1L248"></span></td>
+			<td class="lines-num lines-num-new" data-line-num="275"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R275"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=" "></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="275">+</a><span class="mono wrap language-go">func OddsToOriginJuice(h, a, d float64) float64 {</span></td>
+		</tr>
+		
+	
+		<tr class="same-code nl-12 ol-12">
+			
+			<td class="lines-num lines-num-old" data-line-num="249"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1L249"></span></td>
+			<td class="lines-num lines-num-new" data-line-num="276"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R276"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=" "></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="276">+</a><span class="mono wrap language-go">	if h == 0 || a == 0 {</span></td>
+		</tr>
+		
+	
+
+	
+		<tr class="tag-code nl-0 ol-0">
+			
+			<td colspan="2" class="lines-num">
+				
+			</td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=""></span></td>
+			<td class="lines-code lines-code-old"><span class="mono wrap language-go">@@ -256,6 +283,17 @@ func OddsToOriginJuice(h, a, d float64) float64 {</span></td>
+		</tr>
+		
+	
+		<tr class="same-code nl-1 ol-1">
+			
+			<td class="lines-num lines-num-old" data-line-num="256"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1L256"></span></td>
+			<td class="lines-num lines-num-new" data-line-num="283"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R283"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=" "></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="283">+</a><span class="mono wrap language-go">	return all - 1</span></td>
+		</tr>
+		
+	
+		<tr class="same-code nl-2 ol-2">
+			
+			<td class="lines-num lines-num-old" data-line-num="257"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1L257"></span></td>
+			<td class="lines-num lines-num-new" data-line-num="284"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R284"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=" "></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="284">+</a><span class="mono wrap language-go">}</span></td>
+		</tr>
+		
+	
+		<tr class="same-code nl-3 ol-3">
+			
+			<td class="lines-num lines-num-old" data-line-num="258"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1L258"></span></td>
+			<td class="lines-num lines-num-new" data-line-num="285"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R285"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=" "></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="285">+</a><span class="mono wrap language-go"><br></span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-4 ol-4">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="286"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R286"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="286">+</a><span class="mono wrap language-go">//MultiOddsToOriginJuice same as OddsToOriginJuice</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-5 ol-5">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="287"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R287"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="287">+</a><span class="mono wrap language-go">func MultiOddsToOriginJuice(oddses []float64) float64 {</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-6 ol-6">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="288"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R288"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="288">+</a><span class="mono wrap language-go">	all := 0.0</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-7 ol-7">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="289"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R289"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="289">+</a><span class="mono wrap language-go">	for _, odds := range oddses {</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-8 ol-8">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="290"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R290"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="290">+</a><span class="mono wrap language-go">		if odds &gt; 0 {</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-9 ol-9">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="291"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R291"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="291">+</a><span class="mono wrap language-go">			all += 1.0 / (1.0 + odds)</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-10 ol-10">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="292"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R292"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="292">+</a><span class="mono wrap language-go">		}</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-11 ol-11">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="293"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R293"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="293">+</a><span class="mono wrap language-go">	}</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-12 ol-12">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="294"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R294"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="294">+</a><span class="mono wrap language-go">	return all - 1</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-13 ol-13">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="295"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R295"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="295">+</a><span class="mono wrap language-go">}</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-14 ol-14">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="296"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R296"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="296">+</a><span class="mono wrap language-go"><br></span></td>
+		</tr>
+		
+	
+		<tr class="same-code nl-15 ol-15">
+			
+			<td class="lines-num lines-num-old" data-line-num="259"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1L259"></span></td>
+			<td class="lines-num lines-num-new" data-line-num="297"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R297"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=" "></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="297">+</a><span class="mono wrap language-go">// RecalculateOddsByJuice 來源賠率直接轉飛騰的吃水設定，若設定為零，回傳原始數值</span></td>
+		</tr>
+		
+	
+		<tr class="same-code nl-16 ol-16">
+			
+			<td class="lines-num lines-num-old" data-line-num="260"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1L260"></span></td>
+			<td class="lines-num lines-num-new" data-line-num="298"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R298"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=" "></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="298">+</a><span class="mono wrap language-go">func RecalculateOddsByJuice(homeOddsSrc, awayOddsSrc, drawOddsSrc float64, juice uint) (float64, float64, float64) {</span></td>
+		</tr>
+		
+	
+		<tr class="same-code nl-17 ol-17">
+			
+			<td class="lines-num lines-num-old" data-line-num="261"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1L261"></span></td>
+			<td class="lines-num lines-num-new" data-line-num="299"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R299"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=" "></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="299">+</a><span class="mono wrap language-go">	if juice == 0 || homeOddsSrc == 0 || awayOddsSrc == 0 {</span></td>
+		</tr>
+		
+	
+
+	
+		<tr class="tag-code nl-0 ol-0">
+			
+			<td colspan="2" class="lines-num">
+				
+			</td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=""></span></td>
+			<td class="lines-code lines-code-old"><span class="mono wrap language-go">@@ -266,6 +304,16 @@ func RecalculateOddsByJuice(homeOddsSrc, awayOddsSrc, drawOddsSrc float64, juice</span></td>
+		</tr>
+		
+	
+		<tr class="same-code nl-1 ol-1">
+			
+			<td class="lines-num lines-num-old" data-line-num="266"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1L266"></span></td>
+			<td class="lines-num lines-num-new" data-line-num="304"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R304"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=" "></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="304">+</a><span class="mono wrap language-go">	return OppoToOdds(hoppo, j), OppoToOdds(aoppo, j), OppoToOdds(doppo, j)</span></td>
+		</tr>
+		
+	
+		<tr class="same-code nl-2 ol-2">
+			
+			<td class="lines-num lines-num-old" data-line-num="267"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1L267"></span></td>
+			<td class="lines-num lines-num-new" data-line-num="305"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R305"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=" "></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="305">+</a><span class="mono wrap language-go">}</span></td>
+		</tr>
+		
+	
+		<tr class="same-code nl-3 ol-3">
+			
+			<td class="lines-num lines-num-old" data-line-num="268"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1L268"></span></td>
+			<td class="lines-num lines-num-new" data-line-num="306"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R306"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=" "></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="306">+</a><span class="mono wrap language-go"><br></span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-4 ol-4">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="307"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R307"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="307">+</a><span class="mono wrap language-go">//MultiProbabilityToOdds same as ProbabilityToOdds</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-5 ol-5">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="308"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R308"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="308">+</a><span class="mono wrap language-go">func MultiProbabilityToOdds(oppos []float64, juice uint) (oddses []float64) {</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-6 ol-6">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="309"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R309"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="309">+</a><span class="mono wrap language-go">	j := TransferJuice(juice)</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-7 ol-7">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="310"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R310"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="310">+</a><span class="mono wrap language-go">	oddses = make([]float64, len(oppos))</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-8 ol-8">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="311"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R311"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="311">+</a><span class="mono wrap language-go">	for i := range oppos {</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-9 ol-9">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="312"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R312"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="312">+</a><span class="mono wrap language-go">		oddses[i] = OppoToOdds(oppos[i], j)</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-10 ol-10">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="313"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R313"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="313">+</a><span class="mono wrap language-go">	}</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-11 ol-11">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="314"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R314"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="314">+</a><span class="mono wrap language-go">	return</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-12 ol-12">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="315"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R315"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="315">+</a><span class="mono wrap language-go">}</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-13 ol-13">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="316"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R316"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="316">+</a><span class="mono wrap language-go"><br></span></td>
+		</tr>
+		
+	
+		<tr class="same-code nl-14 ol-14">
+			
+			<td class="lines-num lines-num-old" data-line-num="269"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1L269"></span></td>
+			<td class="lines-num lines-num-new" data-line-num="317"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R317"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=" "></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="317">+</a><span class="mono wrap language-go">// ProbabilityToOdds 勝率＆吃水設定換算可賣賠率</span></td>
+		</tr>
+		
+	
+		<tr class="same-code nl-15 ol-15">
+			
+			<td class="lines-num lines-num-old" data-line-num="270"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1L270"></span></td>
+			<td class="lines-num lines-num-new" data-line-num="318"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R318"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=" "></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="318">+</a><span class="mono wrap language-go">func ProbabilityToOdds(h, a, d float64, juice uint) (float64, float64, float64) {</span></td>
+		</tr>
+		
+	
+		<tr class="same-code nl-16 ol-16">
+			
+			<td class="lines-num lines-num-old" data-line-num="271"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1L271"></span></td>
+			<td class="lines-num lines-num-new" data-line-num="319"><span rel="diff-af0e95e5f8e74b05553ba91b0409185d14a269c1R319"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=" "></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal.go" data-side="right" data-idx="319">+</a><span class="mono wrap language-go">	j := TransferJuice(juice)</span></td>
+		</tr>
+		
+	
+
+
+										
+									</tbody>
+								</table>
+							</div>
+						
+					
+				</div>
+			</div>
+		
+	<br>
+	
+		
+			<div class="diff-file-box diff-box file-content tab-size-8" id="diff-2">
+				<h4 class="ui top attached normal header">
+					<div class="diff-counter count">
+						
+							<span class="add" data-line="23">+ 23</span>
+							<span class="bar">
+								<div class="pull-left add" style="width: 100%;"></div>
+								<div class="pull-left del"></div>
+							</span>
+							<span class="del" data-line="0">- 0</span>
+						
+					</div>
+					<span class="file">handlers/offertype/oddscal_test.go</span>
+					
+						
+							<a class="ui basic grey tiny button" rel="nofollow" href="https://git.b5k.io/fsbs/go-ums/src/commit/6d16f0134bf31f79f773df996f93384d5b11b4b0/handlers/offertype/oddscal_test.go">查看文件</a>
+						
+					
+				</h4>
+				<div class="ui attached unstackable table segment">
+					
+						
+						
+							<div class="file-body file-code code-view code-diff code-diff-unified">
+								<table>
+									<tbody>
+										
+											
+
+
+	
+		<tr class="tag-code nl-0 ol-0">
+			
+			<td colspan="2" class="lines-num">
+				
+			</td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=""></span></td>
+			<td class="lines-code lines-code-old"><span class="mono wrap language-go">@@ -1,6 +1,7 @@</span></td>
+		</tr>
+		
+	
+		<tr class="same-code nl-1 ol-1">
+			
+			<td class="lines-num lines-num-old" data-line-num="1"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511L1"></span></td>
+			<td class="lines-num lines-num-new" data-line-num="1"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511R1"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=" "></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal_test.go" data-side="right" data-idx="1">+</a><span class="mono wrap language-go">package offertype</span></td>
+		</tr>
+		
+	
+		<tr class="same-code nl-2 ol-2">
+			
+			<td class="lines-num lines-num-old" data-line-num="2"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511L2"></span></td>
+			<td class="lines-num lines-num-new" data-line-num="2"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511R2"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=" "></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal_test.go" data-side="right" data-idx="2">+</a><span class="mono wrap language-go"><br></span></td>
+		</tr>
+		
+	
+		<tr class="same-code nl-3 ol-3">
+			
+			<td class="lines-num lines-num-old" data-line-num="3"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511L3"></span></td>
+			<td class="lines-num lines-num-new" data-line-num="3"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511R3"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=" "></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal_test.go" data-side="right" data-idx="3">+</a><span class="mono wrap language-go">import (</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-4 ol-4">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="4"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511R4"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal_test.go" data-side="right" data-idx="4">+</a><span class="mono wrap language-go">	"math"</span></td>
+		</tr>
+		
+	
+		<tr class="same-code nl-5 ol-5">
+			
+			<td class="lines-num lines-num-old" data-line-num="4"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511L4"></span></td>
+			<td class="lines-num lines-num-new" data-line-num="5"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511R5"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=" "></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal_test.go" data-side="right" data-idx="5">+</a><span class="mono wrap language-go">	"reflect"</span></td>
+		</tr>
+		
+	
+		<tr class="same-code nl-6 ol-6">
+			
+			<td class="lines-num lines-num-old" data-line-num="5"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511L5"></span></td>
+			<td class="lines-num lines-num-new" data-line-num="6"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511R6"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=" "></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal_test.go" data-side="right" data-idx="6">+</a><span class="mono wrap language-go">	"testing"</span></td>
+		</tr>
+		
+	
+		<tr class="same-code nl-7 ol-7">
+			
+			<td class="lines-num lines-num-old" data-line-num="6"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511L6"></span></td>
+			<td class="lines-num lines-num-new" data-line-num="7"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511R7"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=" "></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal_test.go" data-side="right" data-idx="7">+</a><span class="mono wrap language-go"><br></span></td>
+		</tr>
+		
+	
+
+	
+		<tr class="tag-code nl-0 ol-0">
+			
+			<td colspan="2" class="lines-num">
+				
+			</td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=""></span></td>
+			<td class="lines-code lines-code-old"><span class="mono wrap language-go">@@ -240,3 +241,25 @@ func TestCalculateOdds(t *testing.T) {</span></td>
+		</tr>
+		
+	
+		<tr class="same-code nl-1 ol-1">
+			
+			<td class="lines-num lines-num-old" data-line-num="240"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511L240"></span></td>
+			<td class="lines-num lines-num-new" data-line-num="241"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511R241"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=" "></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal_test.go" data-side="right" data-idx="241">+</a><span class="mono wrap language-go">		})</span></td>
+		</tr>
+		
+	
+		<tr class="same-code nl-2 ol-2">
+			
+			<td class="lines-num lines-num-old" data-line-num="241"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511L241"></span></td>
+			<td class="lines-num lines-num-new" data-line-num="242"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511R242"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=" "></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal_test.go" data-side="right" data-idx="242">+</a><span class="mono wrap language-go">	}</span></td>
+		</tr>
+		
+	
+		<tr class="same-code nl-3 ol-3">
+			
+			<td class="lines-num lines-num-old" data-line-num="242"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511L242"></span></td>
+			<td class="lines-num lines-num-new" data-line-num="243"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511R243"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker=" "></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal_test.go" data-side="right" data-idx="243">+</a><span class="mono wrap language-go">}</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-4 ol-4">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="244"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511R244"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal_test.go" data-side="right" data-idx="244">+</a><span class="mono wrap language-go"><br></span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-5 ol-5">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="245"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511R245"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal_test.go" data-side="right" data-idx="245">+</a><span class="mono wrap language-go">func TestCalculateOdds2(t *testing.T) {</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-6 ol-6">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="246"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511R246"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal_test.go" data-side="right" data-idx="246">+</a><span class="mono wrap language-go">	oddsOri := []float64{110, 6.3, 9, 35, 100, 90, 30, 200, 16, 25, 60, 12, 200, 30, 20, 35, 35, 80, 15, 15.5, 12, 9.5, 7.4, 9.5, 25, 12}</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-7 ol-7">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="247"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511R247"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal_test.go" data-side="right" data-idx="247">+</a><span class="mono wrap language-go">	//oddsOri := []float64{1, 1, 0}</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-8 ol-8">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="248"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511R248"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal_test.go" data-side="right" data-idx="248">+</a><span class="mono wrap language-go"><br></span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-9 ol-9">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="249"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511R249"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal_test.go" data-side="right" data-idx="249">+</a><span class="mono wrap language-go">	oppos := MultiOddsToOppoOrigin(oddsOri)</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-10 ol-10">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="250"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511R250"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal_test.go" data-side="right" data-idx="250">+</a><span class="mono wrap language-go">	juice := MultiOddsToJuice(oddsOri)</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-11 ol-11">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="251"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511R251"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal_test.go" data-side="right" data-idx="251">+</a><span class="mono wrap language-go">	oddsNew := MultiProbabilityToOdds(oppos, juice)</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-12 ol-12">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="252"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511R252"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal_test.go" data-side="right" data-idx="252">+</a><span class="mono wrap language-go"><br></span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-13 ol-13">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="253"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511R253"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal_test.go" data-side="right" data-idx="253">+</a><span class="mono wrap language-go">	totalOppo := 0.0</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-14 ol-14">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="254"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511R254"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal_test.go" data-side="right" data-idx="254">+</a><span class="mono wrap language-go">	for _, oppo := range oppos {</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-15 ol-15">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="255"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511R255"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal_test.go" data-side="right" data-idx="255">+</a><span class="mono wrap language-go">		totalOppo += oppo</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-16 ol-16">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="256"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511R256"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal_test.go" data-side="right" data-idx="256">+</a><span class="mono wrap language-go">	}</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-17 ol-17">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="257"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511R257"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal_test.go" data-side="right" data-idx="257">+</a><span class="mono wrap language-go">	t.Logf("總機率 %v", totalOppo)</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-18 ol-18">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="258"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511R258"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal_test.go" data-side="right" data-idx="258">+</a><span class="mono wrap language-go">	t.Logf("水位 %v", juice)</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-19 ol-19">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="259"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511R259"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal_test.go" data-side="right" data-idx="259">+</a><span class="mono wrap language-go"><br></span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-20 ol-20">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="260"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511R260"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal_test.go" data-side="right" data-idx="260">+</a><span class="mono wrap language-go">	for i := range oddsOri {</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-21 ol-21">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="261"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511R261"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal_test.go" data-side="right" data-idx="261">+</a><span class="mono wrap language-go">		if math.Abs(oddsOri[i]-oddsNew[i]) &gt; 0.05 {</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-22 ol-22">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="262"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511R262"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal_test.go" data-side="right" data-idx="262">+</a><span class="mono wrap language-go">			t.Errorf("賠率轉換測試 origin odds VS new odds 誤差大於 0.05:  ori:%v VS new:%v", oddsOri[i], oddsNew[i])</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-23 ol-23">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="263"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511R263"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal_test.go" data-side="right" data-idx="263">+</a><span class="mono wrap language-go">		}</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-24 ol-24">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="264"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511R264"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal_test.go" data-side="right" data-idx="264">+</a><span class="mono wrap language-go">	}</span></td>
+		</tr>
+		
+	
+		<tr class="add-code nl-25 ol-25">
+			
+			<td class="lines-num lines-num-old" data-line-num=""><span rel=""></span></td>
+			<td class="lines-num lines-num-new" data-line-num="265"><span rel="diff-509c38a71a8a536ac326228daa60b20e7d233511R265"></span></td>
+			
+			<td class="lines-type-marker"><span class="mono" data-type-marker="+"></span></td>
+			<td class="lines-code"><a class="ui green button add-code-comment add-code-comment-right" data-path="handlers/offertype/oddscal_test.go" data-side="right" data-idx="265">+</a><span class="mono wrap language-go">}</span></td>
+		</tr>
+		
+	
+
+
+										
+									</tbody>
+								</table>
+							</div>
+						
+					
+				</div>
+			</div>
+		
+	<br>
+	
+
+	
+
+	
+		<div id="pull_review_add_comment" class="hide">
+		    <div class="field comment-code-cloud">
+	
+	
+	
+	<form class="ui form" action="https://git.b5k.io/fsbs/go-ums/pulls/95/files/reviews/comments" method="post">
+	<input type="hidden" name="_csrf" value="5G3fTaue2NNrZN9Gt7EUtn6f4Bc6MTU5MTYyODAzOTM5Njk0OTQ4NA==">
+		<input type="hidden" name="side" value="">
+		<input type="hidden" name="line" value="">
+		<input type="hidden" name="path" value="">
+		<input type="hidden" name="diff_start_cid">
+		<input type="hidden" name="diff_end_cid">
+		<input type="hidden" name="diff_base_cid">
+		<div class="ui top attached tabular menu" onload="assingMenuAttributes(this)" data-write="write" data-preview="preview">
+			<a class="active item" data-tab="write">Write</a>
+			<a class="item" data-tab="preview" data-url="https://git.b5k.io/api/v1/repos/fsbs/go-ums/markdown" data-context="/fsbs/go-ums">Preview</a>
+		</div>
+		<div class="ui bottom attached active tab segment" data-tab="write">
+			<div class="field">
+				<textarea name="content" placeholder="Leave a comment"></textarea>
+			</div>
+		</div>
+		<div class="ui bottom attached tab segment markdown" data-tab="preview">
+		
+		</div>
+		<div class="footer">
+			<span class="markdown-info"><i class="octicon octicon-markdown"></i> Styling with markdown is supported.</span>
+			<div class="ui right floated">
+				
+					
+						<button name="is_review" value="true" type="submit" class="ui submit green tiny button btn-start-review">Start review</button>
+						<button type="submit" class="ui submit tiny basic button btn-add-single">Add single comment</button>
+					
+				
+				
+					<button type="button" class="ui submit tiny basic button btn-cancel" onclick="cancelCodeComment(this);">取消</button>
+				
+			</div>
+		</div>
+	</form>
+
+
+
+
+</div>
+
+        </div>
+        <div class="hide" id="edit-content-form">
+            <div class="ui comment form">
+                <div class="ui top attached tabular menu">
+                    <a class="active write item">Write</a>
+                    <a class="preview item" data-url="https://git.b5k.io/api/v1/repos/fsbs/go-ums/markdown" data-context="/fsbs/go-ums">Preview</a>
+                </div>
+                <div class="ui bottom attached active write tab segment">
+                    <textarea tabindex="1" name="content"></textarea>
+                </div>
+                <div class="ui bottom attached tab preview segment markdown">
+                Loading…
+                </div>
+                <div class="text right edit buttons">
+                    <div class="ui basic blue cancel button" tabindex="3">取消</div>
+                    <div class="ui green save button" tabindex="2">儲存</div>
+                </div>
+            </div>
+        </div>
+	 
+
+	
+
+
+		</div>
+	</div>
+</div>
+
+
+	
+
+	</div>
+
+	
+
+	<footer>
+	<div class="ui container">
+		<div class="ui left">
+			© Gitea 版本: 1.9.3 頁面: <strong>161ms</strong> 樣板: <strong>79ms</strong>
+		</div>
+		<div class="ui right links">
+			
+			<div class="ui language bottom floating slide up dropdown link item" tabindex="0">
+				<i class="world icon"></i>
+				<div class="text">繁體中文（台灣）</div>
+				<div class="menu" tabindex="-1">
+					
+						<a lang="zh-TW" class="item active selected" href="https://git.b5k.io/fsbs/go-ums/pulls/95/files#">繁體中文（台灣）</a>
+					
+						<a lang="en-US" class="item " href="https://git.b5k.io/fsbs/go-ums/pulls/95/files?lang=en-US">English</a>
+					
+						<a lang="zh-CN" class="item " href="https://git.b5k.io/fsbs/go-ums/pulls/95/files?lang=zh-CN">简体中文</a>
+					
+						<a lang="zh-HK" class="item " href="https://git.b5k.io/fsbs/go-ums/pulls/95/files?lang=zh-HK">繁體中文（香港）</a>
+					
+						<a lang="de-DE" class="item " href="https://git.b5k.io/fsbs/go-ums/pulls/95/files?lang=de-DE">Deutsch</a>
+					
+						<a lang="fr-FR" class="item " href="https://git.b5k.io/fsbs/go-ums/pulls/95/files?lang=fr-FR">français</a>
+					
+						<a lang="nl-NL" class="item " href="https://git.b5k.io/fsbs/go-ums/pulls/95/files?lang=nl-NL">Nederlands</a>
+					
+						<a lang="lv-LV" class="item " href="https://git.b5k.io/fsbs/go-ums/pulls/95/files?lang=lv-LV">latviešu</a>
+					
+						<a lang="ru-RU" class="item " href="https://git.b5k.io/fsbs/go-ums/pulls/95/files?lang=ru-RU">русский</a>
+					
+						<a lang="uk-UA" class="item " href="https://git.b5k.io/fsbs/go-ums/pulls/95/files?lang=uk-UA">Українська</a>
+					
+						<a lang="ja-JP" class="item " href="https://git.b5k.io/fsbs/go-ums/pulls/95/files?lang=ja-JP">日本語</a>
+					
+						<a lang="es-ES" class="item " href="https://git.b5k.io/fsbs/go-ums/pulls/95/files?lang=es-ES">español</a>
+					
+						<a lang="pt-BR" class="item " href="https://git.b5k.io/fsbs/go-ums/pulls/95/files?lang=pt-BR">português do Brasil</a>
+					
+						<a lang="pl-PL" class="item " href="https://git.b5k.io/fsbs/go-ums/pulls/95/files?lang=pl-PL">polski</a>
+					
+						<a lang="bg-BG" class="item " href="https://git.b5k.io/fsbs/go-ums/pulls/95/files?lang=bg-BG">български</a>
+					
+						<a lang="it-IT" class="item " href="https://git.b5k.io/fsbs/go-ums/pulls/95/files?lang=it-IT">italiano</a>
+					
+						<a lang="fi-FI" class="item " href="https://git.b5k.io/fsbs/go-ums/pulls/95/files?lang=fi-FI">suomi</a>
+					
+						<a lang="tr-TR" class="item " href="https://git.b5k.io/fsbs/go-ums/pulls/95/files?lang=tr-TR">Türkçe</a>
+					
+						<a lang="cs-CZ" class="item " href="https://git.b5k.io/fsbs/go-ums/pulls/95/files?lang=cs-CZ">čeština</a>
+					
+						<a lang="sr-SP" class="item " href="https://git.b5k.io/fsbs/go-ums/pulls/95/files?lang=sr-SP">српски</a>
+					
+						<a lang="sv-SE" class="item " href="https://git.b5k.io/fsbs/go-ums/pulls/95/files?lang=sv-SE">svenska</a>
+					
+						<a lang="ko-KR" class="item " href="https://git.b5k.io/fsbs/go-ums/pulls/95/files?lang=ko-KR">한국어</a>
+					
+				</div>
+			</div>
+			<a href="https://git.b5k.io/vendor/librejs.html" data-jslicense="1">JavaScript licenses</a>
+			<a href="https://git.b5k.io/api/swagger">API</a>
+			<a target="_blank" rel="noopener noreferrer" href="https://gitea.io/">網站</a>
+			<span class="version">Go1.12.9</span>
+		</div>
+	</div>
+</footer>
+
+
+	<script src="./index/jquery.min.js.下載"></script>
+	<script src="./index/jquery-migrate.min.js.下載"></script>
+	<script src="./index/jquery.are-you-sure.js.下載"></script>
+
+
+
+
+
+	<script src="./index/highlight.pack.js.下載"></script>
+
+
+
+
+
+
+
+	<script src="./index/tribute.min.js.下載"></script>
+	<script>
+		var issuesTribute = new Tribute({
+			values: [
+			
+			{key: 'Willy ', value: 'Willy',
+			name: 'Willy', fullname: '', avatar: 'https:\/\/secure.gravatar.com\/avatar\/eb2642de8283ae4e344ae0d7d819dad9?d=identicon'},
+			
+			{key: 'jamie ', value: 'jamie',
+			name: 'jamie', fullname: '', avatar: 'https:\/\/secure.gravatar.com\/avatar\/0601d0b41b0c5bb4988f18526bbd4c02?d=identicon'},
+			
+			{key: 'yung ', value: 'yung',
+			name: 'yung', fullname: '', avatar: 'https:\/\/secure.gravatar.com\/avatar\/d83249208252688fda3fd795a23514d9?d=identicon'},
+			
+			{key: 'hunk ', value: 'hunk',
+			name: 'hunk', fullname: '', avatar: 'https:\/\/secure.gravatar.com\/avatar\/63214a4fca958a47e6215d6f98fdd7e6?d=identicon'},
+			
+			{key: 'mason.chu ', value: 'mason.chu',
+			name: 'mason.chu', fullname: '', avatar: 'https:\/\/secure.gravatar.com\/avatar\/322a37bd30c7f5eac2815a6f6fc21cd6?d=identicon'},
+			
+			{key: 'xiao ', value: 'xiao',
+			name: 'xiao', fullname: '', avatar: 'https:\/\/secure.gravatar.com\/avatar\/34ecc4ec38fd82d96c8848f97e10164f?d=identicon'},
+			
+			{key: 'Philip ', value: 'Philip',
+			name: 'Philip', fullname: '', avatar: 'https:\/\/secure.gravatar.com\/avatar\/184d1f4381c675a911bf1f6b0aca0ab0?d=identicon'},
+			
+			{key: 'service ', value: 'service',
+			name: 'service', fullname: '', avatar: 'https:\/\/secure.gravatar.com\/avatar\/b1ba9c080b440c0f231ab56829969c6e?d=identicon'},
+			
+			{key: 'janice ', value: 'janice',
+			name: 'janice', fullname: '', avatar: 'https:\/\/secure.gravatar.com\/avatar\/251b6727861a6f6dea1dea6aadc66895?d=identicon'},
+			
+			{key: 'Tom.hsu ', value: 'Tom.hsu',
+			name: 'Tom.hsu', fullname: '', avatar: '\/img\/avatar_default.png'},
+			
+			{key: 'doris ', value: 'doris',
+			name: 'doris', fullname: '', avatar: 'https:\/\/secure.gravatar.com\/avatar\/72f62f3a01d3a759366246d4b36cd37f?d=identicon'},
+			
+			{key: 'dylan.huang ', value: 'dylan.huang',
+			name: 'dylan.huang', fullname: '', avatar: 'https:\/\/secure.gravatar.com\/avatar\/14236389a884d5c59fe119804ada3252?d=identicon'},
+			
+			{key: 'wayne.shen ', value: 'wayne.shen',
+			name: 'wayne.shen', fullname: '', avatar: '\/img\/avatar_default.png'},
+			
+			{key: 'kaiji.chang ', value: 'kaiji.chang',
+			name: 'kaiji.chang', fullname: '', avatar: '\/img\/avatar_default.png'},
+			
+			{key: 'dave.gam ', value: 'dave.gam',
+			name: 'dave.gam', fullname: '', avatar: '\/avatars\/cc3dc2efb1d78f802555acc9fd9b66b3'},
+			
+			],
+			noMatchTemplate: function () { return null },
+			menuItemTemplate: function (item) {
+				var user = item.original;
+				var itemStr = '<img src="' + user.avatar + '"/><span class="name">' + user.name + '</span>';
+				if (user.fullname && user.fullname != '') {
+					itemStr += '<span class="fullname">' + user.fullname + '</span>';
+				}
+				return itemStr;
+			}
+		});
+		var content = document.getElementById('content');
+		if (content != null) {
+			issuesTribute.attach(content);
+		}
+	</script>
+	<script>
+		var emojiTribute = new Tribute({
+			collection: [{
+				trigger: ':',
+				requireLeadingSpace: true,
+				values: function (text, cb) {
+					var array = emojify.emojiNames;
+					var data = [];
+					for(var j=0; j<array.length; j++) {
+						if(array[j].indexOf(text) !== -1) {
+							data.push(array[j]);
+							if(data.length > 5) {
+								break;
+							}
+						}
+					}
+					cb(data);
+				},
+				lookup: function (item) {
+					return item;
+				},
+				selectTemplate: function (item) {
+					if (typeof item === 'undefined') return null;
+					return ':' + item.original + ':';
+				},
+				menuItemTemplate: function (item) {
+					return '<img class="emoji" src="/vendor/plugins/emojify/images/' + item.original + '.png"/>' + item.original;
+				}
+			}]
+		});
+		var emojiInputs = document.querySelectorAll('.emoji-input');
+		if (emojiInputs.length > 0) {
+			emojiTribute.attach(emojiInputs);
+		}
+		var content = document.getElementById('content');
+		if (content != null) {
+			emojiTribute.attach(document.getElementById('content'));
+		}
+	</script>
+
+	<script src="./index/emojify.min.js.下載"></script>
+	<script src="./index/clipboard.min.js.下載"></script>
+	<script src="./index/vue.min.js.下載"></script>
+
+	
+	<script src="./index/semantic.min.js.下載"></script>
+	<script src="./index/index.js.下載"></script>
+
+
+
+
+
+</body></html>
